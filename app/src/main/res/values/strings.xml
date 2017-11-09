@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">FormDemo</string>
+    
+    <string-array name="pizzaSize">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+    </string-array>
+    
+</resources>

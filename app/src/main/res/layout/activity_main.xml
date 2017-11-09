@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="mchehab.com.formdemo.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/editTextName"
+            style="@style/editText"
+            android:layout_marginTop="8dp"
+            android:hint="Customer name"/>
+
+        <EditText
+            android:id="@+id/editTextPhone"
+            style="@style/editText"
+            android:inputType="phone"
+            android:hint="Telephone"/>
+
+        <EditText
+            android:id="@+id/editTextEmail"
+            style="@style/editText"
+            android:imeOptions="actionDone"
+            android:inputType="textEmailAddress"
+            android:hint="E-mail address"/>
+
+        <Spinner
+            android:id="@+id/spinnerToppings"
+            style="@style/dimensions"
+            android:entries="@array/pizzaSize"/>
+
+        <CheckBox
+            style="@style/dimensions"
+            android:text="Bacon"/>
+
+        <CheckBox
+            style="@style/dimensions"
+            android:text="Extra Cheese"/>
+
+        <CheckBox
+            style="@style/dimensions"
+            android:text="Onion"/>
+
+        <CheckBox
+            style="@style/dimensions"
+            android:text="Mushroom"/>
+
+        <EditText
+            android:id="@+id/editTextTime"
+            style="@style/editText"
+            android:hint="Preferred Delivery Time"/>
+
+        <EditText
+            android:id="@+id/editTextDelivery"
+            style="@style/editText"
+            android:imeOptions="actionDone"
+            android:hint="Delivery instructions"/>
+
+        <Button
+            android:id="@+id/button"
+            style="@style/dimensions"
+            android:text="Submit Order"/>
+    </LinearLayout>
+</ScrollView>
