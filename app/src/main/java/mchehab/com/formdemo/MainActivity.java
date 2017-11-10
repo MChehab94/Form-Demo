@@ -48,6 +48,21 @@ public class MainActivity extends AppCompatActivity {
         buttonPost = findViewById(R.id.button);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        if(savedInstanceState != null){
+            checkboxBacon.setChecked(savedInstanceState.getBoolean("checkboxBacon"));
+            checkboxExtraCheese.setChecked(savedInstanceState.getBoolean("checkboxExtraCheese"));
+            checkboxOnion.setChecked(savedInstanceState.getBoolean("checkboxOnion"));
+            checkboxMushroom.setChecked(savedInstanceState.getBoolean("checkboxMushroom"));
+        }
+    }
+
+    protected void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        bundle.putBoolean("checkboxBacon", checkboxBacon.isChecked());
+        bundle.putBoolean("checkboxExtraCheese", checkboxExtraCheese.isChecked());
+        bundle.putBoolean("checkboxOnion", checkboxOnion.isChecked());
+        bundle.putBoolean("checkboxMushroom", checkboxMushroom.isChecked());
     }
 
     private CheckedTextView initCheckedTextView(int id){
