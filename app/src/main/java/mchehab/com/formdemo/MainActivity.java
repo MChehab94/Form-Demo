@@ -1,5 +1,11 @@
 package mchehab.com.formdemo;
 
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.WindowManager;
@@ -7,6 +13,12 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +37,38 @@ public class MainActivity extends AppCompatActivity {
     private EditText editTextDelivery;
 
     private Button buttonPost;
+
+    private boolean isJSONPosting = false;
+
+    private BroadcastReceiver broadcastReceiverPost = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            if(bundle != null){
+                String result = bundle.getString("result");
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Result")
+                        .setMessage(result)
+                        .setPositiveButton("Ok", null)
+                        .create()
+                        .show();
+                isJSONPosting = false;
+            }
+        }
+    };
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverPost, new
+                IntentFilter(BroadcastConstants.JSON_POST));
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
             checkboxOnion.setChecked(savedInstanceState.getBoolean("checkboxOnion"));
             checkboxMushroom.setChecked(savedInstanceState.getBoolean("checkboxMushroom"));
         }
+
+        setButtonOnClickListener();
     }
 
     protected void onSaveInstanceState(Bundle bundle) {
@@ -71,5 +117,50 @@ public class MainActivity extends AppCompatActivity {
             checkedTextView.toggle();
         });
         return checkedTextView;
+    }
+
+    private void setButtonOnClickListener(){
+        buttonPost.setOnClickListener(e->{
+            try{
+                JSONObject jsonObject = new JSONObject();
+                JSONArray jsonArrayToppings = new JSONArray();
+
+                JSONObject jsonObjectForm = new JSONObject();
+
+                jsonObject.put("custname", editTextName.getText().toString());
+                jsonObject.put("custemail", editTextEmail.getText().toString());
+                jsonObject.put("custtel", editTextPhone.getText().toString());
+                jsonObject.put("size", spinnerPizzaSize.getSelectedItem());
+                jsonObject.put("delivery", editTextTime.getText().toString());
+                jsonObject.put("comments", editTextDelivery.getText().toString());
+
+                if(checkboxBacon.isChecked()){
+                    jsonArrayToppings.put("bacon");
+                }
+                if(checkboxExtraCheese.isChecked()){
+                    jsonArrayToppings.put("cheese");
+                }
+                if(checkboxOnion.isChecked()){
+                    jsonArrayToppings.put("onion");
+                }
+                if(checkboxMushroom.isChecked()){
+                    jsonArrayToppings.put("mushroom");
+                }
+
+                if(jsonArrayToppings.length() > 0){
+                    jsonObject.put("toppings", jsonArrayToppings);
+                }
+
+                jsonObjectForm.put("form", jsonObject);
+
+                new HttpAsyncTask(new WeakReference<Context>(this), BroadcastConstants
+                        .JSON_POST, HTTP.POST, jsonObjectForm.toString())
+                        .execute("http://httpbin.org/post");
+                isJSONPosting = true;
+
+            }catch (JSONException jsonException){
+                jsonException.printStackTrace();
+            }
+        });
     }
 }
