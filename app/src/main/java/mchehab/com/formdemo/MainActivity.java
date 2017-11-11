@@ -19,8 +19,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import butterknife.BindView;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,10 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.spinnerToppings) protected Spinner spinnerPizzaSize;
 
-    @BindView(R.id.checkboxBacon) protected CheckedTextView checkboxBacon;
-    @BindView(R.id.checkboxExtraCheese) protected CheckedTextView checkboxExtraCheese;
-    @BindView(R.id.checkboxOnion) protected CheckedTextView checkboxOnion;
-    @BindView(R.id.checkboxMushroom) protected CheckedTextView checkboxMushroom;
+    @BindViews({R.id.checkboxBacon, R.id.checkboxExtraCheese, R.id.checkboxOnion, R.id.checkboxMushroom})
+    protected List<CheckedTextView> listCheckedTextView;
 
     @BindView(R.id.editTextTime) protected EditText editTextTime;
     @BindView(R.id.editTextDelivery) protected EditText editTextDelivery;
@@ -81,16 +81,12 @@ public class MainActivity extends AppCompatActivity {
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        checkboxBacon.setOnClickListener(e -> checkboxBacon.toggle());
-        checkboxExtraCheese.setOnClickListener(e -> checkboxExtraCheese.toggle());
-        checkboxMushroom.setOnClickListener(e -> checkboxMushroom.toggle());
-        checkboxOnion.setOnClickListener(e -> checkboxOnion.toggle());
+        for(CheckedTextView checkedTextView : listCheckedTextView)
+            checkedTextView.setOnClickListener(e-> checkedTextView.toggle());
 
         if(savedInstanceState != null){
-            checkboxBacon.setChecked(savedInstanceState.getBoolean("checkboxBacon"));
-            checkboxExtraCheese.setChecked(savedInstanceState.getBoolean("checkboxExtraCheese"));
-            checkboxOnion.setChecked(savedInstanceState.getBoolean("checkboxOnion"));
-            checkboxMushroom.setChecked(savedInstanceState.getBoolean("checkboxMushroom"));
+            for(CheckedTextView cTextView : listCheckedTextView)
+                cTextView.setChecked(savedInstanceState.getBoolean(cTextView.getText().toString()));
         }
 
         setButtonOnClickListener();
@@ -98,10 +94,9 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
-        bundle.putBoolean("checkboxBacon", checkboxBacon.isChecked());
-        bundle.putBoolean("checkboxExtraCheese", checkboxExtraCheese.isChecked());
-        bundle.putBoolean("checkboxOnion", checkboxOnion.isChecked());
-        bundle.putBoolean("checkboxMushroom", checkboxMushroom.isChecked());
+        for(CheckedTextView checkedTextView : listCheckedTextView){
+            bundle.putBoolean(checkedTextView.getText().toString(), checkedTextView.isChecked());
+        }
     }
 
     private void setButtonOnClickListener(){
@@ -118,18 +113,9 @@ public class MainActivity extends AppCompatActivity {
                 jsonObject.put("size", spinnerPizzaSize.getSelectedItem());
                 jsonObject.put("delivery", editTextTime.getText().toString());
                 jsonObject.put("comments", editTextDelivery.getText().toString());
-
-                if(checkboxBacon.isChecked()){
-                    jsonArrayToppings.put("bacon");
-                }
-                if(checkboxExtraCheese.isChecked()){
-                    jsonArrayToppings.put("cheese");
-                }
-                if(checkboxOnion.isChecked()){
-                    jsonArrayToppings.put("onion");
-                }
-                if(checkboxMushroom.isChecked()){
-                    jsonArrayToppings.put("mushroom");
+                for(CheckedTextView checkedTextView : listCheckedTextView){
+                    if(checkedTextView.isChecked())
+                        jsonArrayToppings.put(checkedTextView.getText().toString().toLowerCase());
                 }
 
                 if(jsonArrayToppings.length() > 0){
