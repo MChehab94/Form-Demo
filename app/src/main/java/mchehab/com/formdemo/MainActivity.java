@@ -20,23 +20,26 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
 
-    private EditText editTextName;
-    private EditText editTextEmail;
-    private EditText editTextPhone;
+    @BindView(R.id.editTextName) protected EditText editTextName;
+    @BindView(R.id.editTextEmail) protected EditText editTextEmail;
+    @BindView(R.id.editTextPhone) protected EditText editTextPhone;
 
-    private Spinner spinnerPizzaSize;
+    @BindView(R.id.spinnerToppings) protected Spinner spinnerPizzaSize;
 
-    private CheckedTextView checkboxBacon;
-    private CheckedTextView checkboxExtraCheese;
-    private CheckedTextView checkboxOnion;
-    private CheckedTextView checkboxMushroom;
+    @BindView(R.id.checkboxBacon) protected CheckedTextView checkboxBacon;
+    @BindView(R.id.checkboxExtraCheese) protected CheckedTextView checkboxExtraCheese;
+    @BindView(R.id.checkboxOnion) protected CheckedTextView checkboxOnion;
+    @BindView(R.id.checkboxMushroom) protected CheckedTextView checkboxMushroom;
 
-    private EditText editTextTime;
-    private EditText editTextDelivery;
+    @BindView(R.id.editTextTime) protected EditText editTextTime;
+    @BindView(R.id.editTextDelivery) protected EditText editTextDelivery;
 
-    private Button buttonPost;
+    @BindView(R.id.button) protected Button buttonPost;
 
     private boolean isJSONPosting = false;
 
@@ -75,23 +78,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        editTextName = findViewById(R.id.editTextName);
-        editTextEmail = findViewById(R.id.editTextEmail);
-        editTextPhone = findViewById(R.id.editTextPhone);
-
-        spinnerPizzaSize = findViewById(R.id.spinnerToppings);
-
-        checkboxBacon = initCheckedTextView(R.id.checkboxBacon);
-        checkboxExtraCheese = initCheckedTextView(R.id.checkboxExtraCheese);
-        checkboxOnion = initCheckedTextView(R.id.checkboxOnion);
-        checkboxMushroom = initCheckedTextView(R.id.checkboxMushroom);
-
-        editTextTime = findViewById(R.id.editTextTime);
-        editTextDelivery = findViewById(R.id.editTextDelivery);
-
-        buttonPost = findViewById(R.id.button);
+        ButterKnife.bind(this);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        checkboxBacon.setOnClickListener(e -> checkboxBacon.toggle());
+        checkboxExtraCheese.setOnClickListener(e -> checkboxExtraCheese.toggle());
+        checkboxMushroom.setOnClickListener(e -> checkboxMushroom.toggle());
+        checkboxOnion.setOnClickListener(e -> checkboxOnion.toggle());
 
         if(savedInstanceState != null){
             checkboxBacon.setChecked(savedInstanceState.getBoolean("checkboxBacon"));
@@ -109,14 +103,6 @@ public class MainActivity extends AppCompatActivity {
         bundle.putBoolean("checkboxExtraCheese", checkboxExtraCheese.isChecked());
         bundle.putBoolean("checkboxOnion", checkboxOnion.isChecked());
         bundle.putBoolean("checkboxMushroom", checkboxMushroom.isChecked());
-    }
-
-    private CheckedTextView initCheckedTextView(int id){
-        CheckedTextView checkedTextView = findViewById(id);
-        checkedTextView.setOnClickListener(e->{
-            checkedTextView.toggle();
-        });
-        return checkedTextView;
     }
 
     private void setButtonOnClickListener(){
