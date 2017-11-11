@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
