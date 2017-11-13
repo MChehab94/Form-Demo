@@ -1,6 +1,7 @@
 package mchehab.com.formdemo;
 
 import android.app.AlertDialog;
+import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,11 +9,14 @@ import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -103,6 +107,9 @@ public class MainActivity extends AppCompatActivity {
     private void setButtonOnClickListener(){
         buttonPost.setOnClickListener(e->{
             try{
+                if(!isFormValid()){
+                    return;
+                }
                 JSONObject jsonObject = new JSONObject();
                 JSONArray jsonArrayToppings = new JSONArray();
 
@@ -134,5 +141,38 @@ public class MainActivity extends AppCompatActivity {
                 jsonException.printStackTrace();
             }
         });
+    }
+
+    private boolean isFormValid(){
+        if(!isValidName(editTextName.getText().toString())){
+            editTextName.setError("Invalid name");
+            return false;
+        }
+        if(!isValidPhone(editTextPhone.getText().toString())){
+            editTextPhone.setError("Invalid phone");
+            return false;
+        }
+        if(!isValidEmail(editTextEmail.getText().toString())){
+            editTextEmail.setError("Invalid email address");
+            return false;
+        }
+        if(editTextTime.getText().toString().length() == 0){
+            editTextTime.setError("Invalid time");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isValidPhone(String phone){
+        return android.util.Patterns.PHONE.matcher(phone).matches();
+    }
+
+    private Boolean isValidEmail(String email){
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private boolean isValidName(String name){
+        String regex = "^[\\p{L} .'-]+$";//this regex is from https://stackoverflow.com/questions/15805555/java-regex-to-validate-full-name-allow-only-spaces-and-letters
+        return name.matches(regex);
     }
 }
