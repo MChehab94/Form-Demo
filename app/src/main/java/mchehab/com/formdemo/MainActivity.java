@@ -94,7 +94,15 @@ public class MainActivity extends AppCompatActivity {
                 cTextView.setChecked(savedInstanceState.getBoolean(cTextView.getText().toString()));
         }
 
+        setupTimePickerDialog();
         setButtonOnClickListener();
+    }
+
+    private void setupTimePickerDialog(){
+        editTextTime.setInputType(InputType.TYPE_NULL);
+        editTextTime.setOnClickListener(v -> new TimePickerDialog(MainActivity.this,
+                (view, hourOfDay, minute) -> editTextTime.setText(hourOfDay + ":" + minute), 0,
+                0, true).show());
     }
 
     protected void onSaveInstanceState(Bundle bundle) {
