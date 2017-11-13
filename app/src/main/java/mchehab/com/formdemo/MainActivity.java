@@ -167,6 +167,8 @@ public class MainActivity extends AppCompatActivity {
         if(editTextTime.getText().toString().length() == 0){
             editTextTime.setError("Invalid time");
             return false;
+        }else{
+            editTextTime.setError(null);
         }
         return true;
     }
